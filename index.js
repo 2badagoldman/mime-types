@@ -185,6 +185,11 @@ function populateMaps (extensions, types) {
 
 // Resolve type conflict using mime-score
 function _preferredType (ext, type0, type1) {
+  // .mp4 is a video container; prefer video/mp4 over application/mp4
+  if (ext === 'mp4' && (type0 === 'video/mp4' || type1 === 'video/mp4')) {
+    return 'video/mp4'
+  }
+
   var score0 = type0 ? mimeScore(type0, db[type0].source) : 0
   var score1 = type1 ? mimeScore(type1, db[type1].source) : 0
 
