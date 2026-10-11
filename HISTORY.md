@@ -1,3 +1,8 @@
+unreleased
+==========
+
+* fix: resolve `.mp4` to `video/mp4` instead of `application/mp4`
+
 3.0.1 / 2025-03-26
 ===================
 
