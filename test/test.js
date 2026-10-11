@@ -146,6 +146,12 @@ describe('mimeTypes', function () {
       assert.strictEqual(mimeTypes.lookup('.json'), 'application/json')
     })
 
+    it('should return mime type for ".mp4"', function () {
+      assert.strictEqual(mimeTypes.lookup('.mp4'), 'video/mp4')
+      assert.strictEqual(mimeTypes.lookup('mp4'), 'video/mp4')
+      assert.strictEqual(mimeTypes.lookup('path/to/VIDEO.MP4'), 'video/mp4')
+    })
+
     it('should return mime type for ".rtf"', function () {
       assert.strictEqual(mimeTypes.lookup('.rtf'), 'application/rtf')
     })
