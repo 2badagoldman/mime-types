@@ -1,3 +1,9 @@
+unreleased
+==========
+
+* Fix `mp4` extension resolving to `application/mp4`; it is now `video/mp4` again
+  * only the `mp4` extension changes (`mpg4` is still `application/mp4`)
+
 3.0.1 / 2025-03-26
 ===================
 
