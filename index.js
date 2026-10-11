@@ -185,6 +185,12 @@ function populateMaps (extensions, types) {
 
 // Resolve type conflict using mime-score
 function _preferredType (ext, type0, type1) {
+  // video/mp4 is the canonical type for .mp4 (application/mp4 would otherwise
+  // win on the application/ type bonus); other extensions are unaffected
+  if (ext === 'mp4') {
+    if (type0 === 'video/mp4' || type1 === 'video/mp4') return 'video/mp4'
+  }
+
   var score0 = type0 ? mimeScore(type0, db[type0].source) : 0
   var score1 = type1 ? mimeScore(type1, db[type1].source) : 0
 
