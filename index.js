@@ -24,6 +24,14 @@ var mimeScore = require('./mimeScore')
 var EXTRACT_TYPE_REGEXP = /^\s*([^;\s]*)(?:;|\s|$)/
 var TEXT_TYPE_REGEXP = /^text\//i
 
+// Explicit extension -> type preferences that override mime-score.
+// mime-score ranks application/mp4 above video/mp4 for "mp4" (the
+// "application" bonus outweighs the shorter-type bonus), but video/mp4 is
+// the type everyone expects for .mp4 files.
+var PREFERRED_TYPES = {
+  mp4: 'video/mp4'
+}
+
 /**
  * Module exports.
  * @public
@@ -185,6 +193,11 @@ function populateMaps (extensions, types) {
 
 // Resolve type conflict using mime-score
 function _preferredType (ext, type0, type1) {
+  var preferred = PREFERRED_TYPES[ext]
+  if (preferred && (type0 === preferred || type1 === preferred)) {
+    return preferred
+  }
+
   var score0 = type0 ? mimeScore(type0, db[type0].source) : 0
   var score1 = type1 ? mimeScore(type1, db[type1].source) : 0
 
