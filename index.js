@@ -23,6 +23,16 @@ var mimeScore = require('./mimeScore')
 
 var EXTRACT_TYPE_REGEXP = /^\s*([^;\s]*)(?:;|\s|$)/
 var TEXT_TYPE_REGEXP = /^text\//i
+var TYPE_TOKEN_REGEXP = /^[a-z0-9][a-z0-9!#$&^_.+-]*\/[a-z0-9][a-z0-9!#$&^_.+-]*$/i
+var TEXT_APPLICATION_TYPES = [
+  'application/ecmascript',
+  'application/javascript',
+  'application/json',
+  'application/x-ecmascript',
+  'application/x-javascript',
+  'application/xml'
+]
+var TEXT_SUFFIX_REGEXP = /\+(?:json|xml)$/i
 
 /**
  * Module exports.
@@ -34,6 +44,7 @@ exports.charsets = { lookup: charset }
 exports.contentType = contentType
 exports.extension = extension
 exports.extensions = Object.create(null)
+exports.isText = isText
 exports.lookup = lookup
 exports.types = Object.create(null)
 exports._extensionConflicts = []
@@ -120,6 +131,37 @@ function extension (type) {
   }
 
   return exts[0]
+}
+
+/**
+ * Determine whether a MIME type (or full Content-Type header) is textual.
+ *
+ * Textual types are any `text/*` type, plus JSON, XML and JavaScript types,
+ * including any type with a `+json` or `+xml` suffix. Parameters such as
+ * `charset` are ignored.
+ *
+ * @param {string} type
+ * @return {boolean}
+ */
+
+function isText (type) {
+  if (!type || typeof type !== 'string') {
+    return false
+  }
+
+  var match = EXTRACT_TYPE_REGEXP.exec(type)
+  var mime = match && match[1].toLowerCase()
+
+  if (!mime || !TYPE_TOKEN_REGEXP.test(mime)) {
+    return false
+  }
+
+  if (TEXT_TYPE_REGEXP.test(mime)) {
+    return true
+  }
+
+  return TEXT_APPLICATION_TYPES.indexOf(mime) !== -1 ||
+    TEXT_SUFFIX_REGEXP.test(mime)
 }
 
 /**
