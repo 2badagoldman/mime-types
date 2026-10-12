@@ -87,6 +87,26 @@ mime.contentType('text/html; charset=iso-8859-1') // 'text/html; charset=iso-885
 mime.contentType(path.extname('/path/to/file.json')) // 'application/json; charset=utf-8'
 ```
 
+### mime.isText(type)
+
+Check whether a content-type (or a full `Content-Type` header) is textual.
+Returns `true` for any `text/*` type, for JSON, XML and JavaScript types, and
+for any type with a `+json` or `+xml` suffix. Parameters such as `charset`
+are ignored. Returns `false` for binary types and for invalid input.
+
+```js
+mime.isText('text/html') // true
+mime.isText('application/json; charset=utf-8') // true
+mime.isText('application/ld+json') // true
+mime.isText('image/svg+xml') // true
+mime.isText('application/javascript') // true
+
+mime.isText('image/png') // false
+mime.isText('application/octet-stream') // false
+mime.isText('json') // false (extensions are not MIME types; use mime.lookup first)
+mime.isText('') // false
+```
+
 ### mime.extension(type)
 
 Get the default extension for a content-type.
